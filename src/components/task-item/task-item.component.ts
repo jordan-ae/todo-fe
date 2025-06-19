@@ -14,7 +14,7 @@ import { Task, Priority } from '../../models/task.model';
             <input
               type="checkbox"
               [checked]="task.completed"
-              (change)="toggleComplete.emit(task.id)"
+              (change)="toggleComplete.emit(task._id)"
             />
             <span class="task-title">{{ task.title }}</span>
           </label>
@@ -33,7 +33,7 @@ import { Task, Priority } from '../../models/task.model';
           <button
             class="action-btn favorite-btn"
             [class.active]="task.favorite"
-            (click)="toggleFavorite.emit(task.id)"
+            (click)="toggleFavorite.emit(task._id)"
             title="Toggle Favorite"
           >
             ★
@@ -47,7 +47,7 @@ import { Task, Priority } from '../../models/task.model';
           </button>
           <button
             class="action-btn delete-btn"
-            (click)="delete.emit(task.id)"
+            (click)="delete.emit(task._id)"
             title="Delete Task"
           >
             🗑️
@@ -250,5 +250,9 @@ export class TaskItemComponent {
   isOverdue(): boolean {
     if (!this.task.dueDate) return false;
     return new Date() > this.task.dueDate && !this.task.completed;
+  }
+
+  trackByTaskId(index: number, task: Task): string {
+    return task._id;
   }
 }

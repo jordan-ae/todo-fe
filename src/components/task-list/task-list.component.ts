@@ -233,22 +233,26 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
   
   trackByTaskId(index: number, task: Task): string {
-    return task.id;
+    return task._id;
   }
   
   onToggleComplete(taskId: string): void {
+    console.log('Toggle Complete Event:', taskId);
     this.taskService.toggleComplete(taskId);
   }
   
   onToggleFavorite(taskId: string): void {
+    console.log('Toggle Favorite Event:', taskId);
     this.taskService.toggleFavorite(taskId);
   }
   
   onEditTask(task: Task): void {
+    console.log('Edit Task Event:', task);
     this.edit.emit(task);
   }
   
   onDeleteTask(taskId: string): void {
+    console.log('Delete Task Event:', taskId);
     if (confirm('Are you sure you want to delete this task?')) {
       this.taskService.deleteTask(taskId);
     }

@@ -30,7 +30,7 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/${endpoint}`, data);
   }
 
-  // New method to create a task with authToken
+  //method to create a task
   createTask(taskData: any): Observable<any> {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
@@ -41,7 +41,7 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/tasks`, taskData, { headers });
   }
 
-  // New method to update a task with authToken
+  // method to update a task
   updateTask(id: string, taskData: any): Observable<any> {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
@@ -52,7 +52,7 @@ export class ApiService {
     return this.http.put(`${this.apiUrl}/tasks/${id}`, taskData, { headers });
   }
 
-  // New method to get tasks with authToken
+  // method to get tasks
   getTasks(): Observable<any> {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
@@ -63,7 +63,7 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/tasks`, { headers });
   }
 
-  // New method to delete a task with authToken
+  // method to delete a task
   deleteTask(id: string): Observable<any> {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
@@ -74,7 +74,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/tasks/${id}`, { headers });
   }
 
-  // New method to toggle favorite status with authToken
+  // method to toggle favorite status
   toggleFavorite(id: string): Observable<any> {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
@@ -85,7 +85,7 @@ export class ApiService {
     return this.http.patch(`${this.apiUrl}/tasks/${id}/favorite`, null, { headers });
   }
 
-  // New method to toggle complete status with authToken
+  // method to toggle complete status
   toggleComplete(id: string): Observable<any> {
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {

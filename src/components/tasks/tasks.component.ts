@@ -162,7 +162,7 @@ export class TasksComponent implements OnInit {
   
   onSaveTask(taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): void {
     if (this.editingTask) {
-      this.taskService.updateTask(this.editingTask.id, taskData);
+      this.taskService.updateTask(this.editingTask._id, taskData);
       this.editingTask = null;
     } else {
       this.taskService.addTask(taskData);
