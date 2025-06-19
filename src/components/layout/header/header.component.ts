@@ -18,7 +18,7 @@ import { User } from '../../../models/user.model';
         
         <div class="header-right" *ngIf="currentUser">
           <div class="user-menu">
-            <span class="user-name">{{ currentUser.name }}</span>
+            <span class="user-name">Hey, {{ currentUser.name }}</span>
             <button class="logout-btn" (click)="onLogout()">
               Sign Out
             </button>
