@@ -5,6 +5,7 @@ import { provideRouter, Router, RouterOutlet } from '@angular/router';
 import { routes } from './app.routes';
 import { AuthService } from './services/auth.service';
 import { HeaderComponent } from './components/layout/header/header.component';
+import { provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -50,6 +51,7 @@ export class App implements OnInit {
 
 bootstrapApplication(App, {
   providers: [
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient()
   ]
-});
+}).catch(err => console.error(err));

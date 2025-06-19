@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
 import { User, LoginCredentials, RegisterData, AuthResponse } from '../models/user.model';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor() {
+  constructor(private apiService: ApiService) {
     this.loadUserFromStorage();
   }
 
@@ -30,79 +31,43 @@ export class AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<AuthResponse> {
-    return of(null).pipe(
-      delay(1000),
-      map(() => {
-        const users = this.getStoredUsers();
-        const user = users.find(u => u.email === credentials.email);
-        
-        if (!user) {
-          throw new Error('User not found');
-        }
-        
-
-        if (user.password !== credentials.password) {
-          throw new Error('Invalid password');
-        }
-        
+    return this.apiService.login(credentials).pipe(
+      map((response: any) => {
         const authUser: User = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          createdAt: user.createdAt
+          id: response.user.id,
+          email: response.user.email,
+          name: response.user.name,
+          createdAt: new Date(response.user.createdAt)
         };
-        
-        const token = this.generateToken();
 
         localStorage.setItem('currentUser', JSON.stringify(authUser));
-        localStorage.setItem('authToken', token);
+        localStorage.setItem('authToken', response.token);
 
         this.currentUserSubject.next(authUser);
         this.isAuthenticatedSubject.next(true);
-        
-        return { user: authUser, token };
+
+        return { user: authUser, token: response.token };
       })
     );
   }
 
   register(userData: RegisterData): Observable<AuthResponse> {
-    return of(null).pipe(
-      delay(1000),
-      map(() => {
-
-        const users = this.getStoredUsers();
-
-        if (users.find(u => u.email === userData.email)) {
-          throw new Error('User with this email already exists');
-        }
-        
-        const newUser = {
-          id: this.generateId(),
-          name: userData.name,
-          email: userData.email,
-          password: userData.password,
-          createdAt: new Date()
-        };
-
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
+    return this.apiService.register(userData).pipe(
+      map((response: any) => {
         const authUser: User = {
-          id: newUser.id,
-          email: newUser.email,
-          name: newUser.name,
-          createdAt: newUser.createdAt
+          id: response.user.id,
+          email: response.user.email,
+          name: response.user.name,
+          createdAt: new Date(response.user.createdAt)
         };
-        
-        const token = this.generateToken();
 
         localStorage.setItem('currentUser', JSON.stringify(authUser));
-        localStorage.setItem('authToken', token);
+        localStorage.setItem('authToken', response.token);
 
         this.currentUserSubject.next(authUser);
         this.isAuthenticatedSubject.next(true);
-        
-        return { user: authUser, token };
+
+        return { user: authUser, token: response.token };
       })
     );
   }
