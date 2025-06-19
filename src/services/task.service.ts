@@ -28,6 +28,7 @@ export class TaskService {
       (response) => {
         const tasks = response.map((task: any) => ({
           ...task,
+          id: task._id,
           dueDate: task.dueDate ? new Date(task.dueDate) : null,
           createdAt: new Date(task.createdAt),
           updatedAt: new Date(task.updatedAt)
@@ -58,7 +59,7 @@ export class TaskService {
   addTask(taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): void {
     const newTask: Task = {
       ...taskData,
-      id: this.generateId(),
+      _id: this.generateId(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -80,7 +81,7 @@ export class TaskService {
       (response) => {
         const currentTasks = this.tasksSubject.value;
         const updatedTasks = currentTasks.map(task =>
-          task.id === id ? { ...task, ...updates, updatedAt: new Date() } : task
+          task._id === id ? { ...task, ...updates, updatedAt: new Date() } : task
         );
         this.tasksSubject.next(updatedTasks);
         this.saveTasks();
@@ -95,7 +96,7 @@ export class TaskService {
     this.apiService.deleteTask(id).subscribe(
       (response) => {
         const currentTasks = this.tasksSubject.value;
-        const filteredTasks = currentTasks.filter(task => task.id !== id);
+        const filteredTasks = currentTasks.filter(task => task._id !== id);
         this.tasksSubject.next(filteredTasks);
         this.saveTasks();
       },
@@ -106,9 +107,10 @@ export class TaskService {
   }
 
   toggleComplete(id: string): void {
+    console.log(id)
     this.apiService.toggleComplete(id).subscribe(
       (response) => {
-        const task = this.tasksSubject.value.find(t => t.id === id);
+        const task = this.tasksSubject.value.find(t => t._id === id);
         if (task) {
           this.updateTask(id, { completed: !task.completed });
         }
@@ -122,7 +124,7 @@ export class TaskService {
   toggleFavorite(id: string): void {
     this.apiService.toggleFavorite(id).subscribe(
       (response) => {
-        const task = this.tasksSubject.value.find(t => t.id === id);
+        const task = this.tasksSubject.value.find(t => t._id === id);
         if (task) {
           this.updateTask(id, { favorite: !task.favorite });
         }

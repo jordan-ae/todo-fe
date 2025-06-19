@@ -233,7 +233,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
   }
   
   trackByTaskId(index: number, task: Task): string {
-    return task.id;
+    return task._id;
   }
   
   onToggleComplete(taskId: string): void {
